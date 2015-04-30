@@ -1,3 +1,3 @@
-![Screenshot](logo.png)
 # Periscope
+![Screenshot](logo.png)
 Tor Censorship Analyzer
