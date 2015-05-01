@@ -1,5 +1,4 @@
 # Periscope
-Tor Censorship Analyzer
 
 ![Screenshot](logo.png)
 
