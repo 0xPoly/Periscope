@@ -70,20 +70,64 @@ class Wizard(object, ttk.Notebook):
 
 def welcome_page(root):
     page = root.page_container(0)
-    title = ttk.Label(page, text='Periscope', font='bold 28').pack()
-    subtitle = ttk.Label(page, text='Tor Censorship Detector',
+    title = ttk.Label(page, text='Periscope', font='bold 28', anchor='s').pack(ipady=10)
+    subtitle = ttk.Label(page, text='Tor Censorship Detector', font='24',
             foreground='grey').pack()
+    logo = Tkinter.PhotoImage(file='resources/logo.gif')
+    image = Tkinter.Label(page, image=logo, anchor='s')
+    image.pack(padx=20, ipady=20)
+    image.image = logo
+
+def acknowledge_page(root):
+    acknowledge_text = \
+            'Periscope is an automated tool for studying censorship ' \
+            'of the Tor network. The Tor Censorship analyzer will conduct ' \
+            'a number of tests to figure out if (and how) tor is being ' \
+            'blocked.\n' \
+            '\n'\
+            'After the tests are run, Periscope may offer you advice on ' \
+            'bypassing the censorship. \n'\
+            '\n'\
+            'Running Periscope may be dangerous in your country. Please '\
+            'proceed with caution.'
+
+    warning_text = \
+            'If you do not wish to run Periscope, simply close this window.'
+
+    placate_text = 'No tests will be run.'
+
+    page = root.page_container(1)
+    title = ttk.Label(page, text='Periscope', font='bold 18', anchor='w') \
+            .pack(fill='both', padx=10, pady=5)
+    information = ttk.Label(page, text=acknowledge_text, anchor='w',
+            wraplength='600', font='18') \
+            .pack(fill='both', padx=10, pady=15)
+    warning = ttk.Label(page, text=warning_text, font='bold', anchor='sw',
+            wraplength='600') \
+            .pack(fill='both', padx=10)
+    placate = ttk.Label(page, text=placate_text, font='18', anchor='w') \
+            .pack(fill='both', padx=10)
+
+def level_page(root):
+    def text_generator():
+        print 'hello'
+    page = root.page_container(2)
+    title = ttk.Label(page, text='Intrusiveness', font='bold 18', anchor='w') \
+            .pack(fill='both', padx=10, pady=5)
+    slider_title = ttk.Label(page, text='Risk Level', font='16', anchor='w') \
+            .pack(fill='x', padx=20)
+    risk_slider = Tkinter.Scale(page, from_=5, to=1, orient='vertical',
+            tickinterval=1, showvalue=False) \
+            .pack(fill='y', padx=30, pady=10, side='left')
 
 def demo():
     root = Tkinter.Tk()
     root.title("Periscope")
-    wizard = Wizard(npages=3)
+    wizard = Wizard(npages=6)
     wizard.master.minsize(600, 400)
     welcome_page(wizard)
-    page1 = ttk.Label(wizard.page_container(1), text='Page 2')
-    page2 = ttk.Label(wizard.page_container(2), text='Page 3')
-    wizard.add_page_body(page1)
-    wizard.add_page_body(page2)
+    acknowledge_page(wizard)
+    level_page(wizard)
     wizard.pack(fill='both', expand=True)
     root.mainloop()
 
