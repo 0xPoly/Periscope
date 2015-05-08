@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+import os
+
 import ttk
 import Tkinter
 
@@ -89,7 +90,8 @@ class gui:
         title = ttk.Label(page, text='Periscope', font='bold 28', anchor='s').pack(ipady=10)
         subtitle = ttk.Label(page, text='Tor Censorship Detector', font='24',
                 foreground='grey').pack()
-        logo = Tkinter.PhotoImage(file='resources/logo.gif')
+        photo_file = os.path.join(os.path.dirname(__file__), "resources","logo.gif")
+        logo = Tkinter.PhotoImage(file=photo_file)
         image = Tkinter.Label(page, image=logo, anchor='s')
         image.pack(padx=20, ipady=20)
         image.image = logo
