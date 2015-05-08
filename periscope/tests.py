@@ -14,9 +14,11 @@ class TestManager:
     All NetTest Objects are managed here
     '''
     def __init__(self):
-        self.testList = [['Official Website Probe', 1, 'Detect whether TorProject.org is Accessible'],
-                ['Directory Authorities', 2,
-                'Try to download consensus from the Tor Directory Authorities']]
+        self.testList = \
+        [['Official Website Probe', 1, 'Detect whether TorProject.org is Accessible'],
+        ['Directory Authorities', 2,'Try to download consensus from the Tor Directory Authorities'],
+        ['Relays', 3, 'Attempt to connect to relays'],
+        ['Bridges',4, 'Attempt to connect to bridges']]
         self.NetTestList = []
 
         for test in self.testList:
@@ -30,8 +32,8 @@ class TestManager:
         '''returns a list of NetTests at or below the specificed risk level'''
         self.availableTests = []
         for test in self.NetTestList:
-            if  test.risklevel <= riskLevel:
+            if  test.riskLevel <= int(riskLevel):
                self.availableTests.append(test)
-        return availableTests
+        return self.availableTests
 
 

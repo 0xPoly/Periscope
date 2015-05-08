@@ -70,88 +70,95 @@ class Wizard(object, ttk.Notebook):
 
     current = property(_get_current, _set_current)
 
-def welcome_page(root):
-    page = root.page_container(0)
-    title = ttk.Label(page, text='Periscope', font='bold 28', anchor='s').pack(ipady=10)
-    subtitle = ttk.Label(page, text='Tor Censorship Detector', font='24',
-            foreground='grey').pack()
-    logo = Tkinter.PhotoImage(file='resources/logo.gif')
-    image = Tkinter.Label(page, image=logo, anchor='s')
-    image.pack(padx=20, ipady=20)
-    image.image = logo
+class gui:
+    def __init__(self, periscope):
+        self.periscope = periscope
+        root = Tkinter.Tk()
+        root.title("Periscope")
+        wizard = Wizard(npages=4)
+        wizard.master.minsize(600, 400)
+        self.welcome_page(wizard)
+        self.acknowledge_page(wizard)
+        self.level_page(wizard)
+        self.test_page(wizard)
+        wizard.pack(fill='both', expand=True)
+        root.mainloop()
 
-def acknowledge_page(root):
-    acknowledge_text = \
-            'Periscope is an automated tool for studying censorship ' \
-            'of the Tor network. The Tor Censorship analyzer will conduct ' \
-            'a number of tests to figure out if (and how) tor is being ' \
-            'blocked.\n' \
-            '\n'\
-            'After the tests are run, Periscope may offer you advice on ' \
-            'bypassing the censorship. \n'\
-            '\n'\
-            'Running Periscope may be dangerous in your country. Please '\
-            'proceed with caution.'
+    def welcome_page(self, root):
+        page = root.page_container(0)
+        title = ttk.Label(page, text='Periscope', font='bold 28', anchor='s').pack(ipady=10)
+        subtitle = ttk.Label(page, text='Tor Censorship Detector', font='24',
+                foreground='grey').pack()
+        logo = Tkinter.PhotoImage(file='resources/logo.gif')
+        image = Tkinter.Label(page, image=logo, anchor='s')
+        image.pack(padx=20, ipady=20)
+        image.image = logo
 
-    warning_text = \
-            'If you do not wish to run Periscope, simply close this window.'
+    def acknowledge_page(self, root):
+        acknowledge_text = \
+                'Periscope is an automated tool for studying censorship ' \
+                'of the Tor network. The Tor Censorship analyzer will conduct ' \
+                'a number of tests to figure out if (and how) tor is being ' \
+                'blocked.\n' \
+                '\n'\
+                'After the tests are run, Periscope may offer you advice on ' \
+                'bypassing the censorship. \n'\
+                '\n'\
+                'Running Periscope may be dangerous in your country. Please '\
+                'proceed with caution.'
 
-    placate_text = 'No tests will be run.'
+        warning_text = \
+                'If you do not wish to run Periscope, simply close this window.'
 
-    page = root.page_container(1)
-    title = ttk.Label(page, text='Periscope', font='bold 18', anchor='w') \
-            .pack(fill='both', padx=10, pady=5)
-    information = ttk.Label(page, text=acknowledge_text, anchor='w',
-            wraplength='600', font='18') \
-            .pack(fill='both', padx=10, pady=15)
-    warning = ttk.Label(page, text=warning_text, font='bold', anchor='sw',
-            wraplength='600') \
-            .pack(fill='both', padx=10)
-    placate = ttk.Label(page, text=placate_text, font='18', anchor='w') \
-            .pack(fill='both', padx=10)
+        placate_text = 'No tests will be run.'
 
-def level_page(root):
-    def text_generator(risk):
-        for test in periscope.TestManager.netTestsByRisk(risk):
-            ttk.Label(page, text=test.name).pack()
-    page = root.page_container(2)
-    title = ttk.Label(page, text='Intrusiveness', font='bold 18', anchor='w') \
-            .pack(fill='both', padx=10, pady=5)
-    slider_title = ttk.Label(page, text='Risk Level', font='16', anchor='w') \
-            .pack(fill='x', padx=20)
-    risk_slider = Tkinter.Scale(page, from_=5, to=1, orient='vertical',
-            tickinterval=1, showvalue=False, command=text_generator) \
-            .pack(fill='y', padx=30, pady=10, side='left')
+        page = root.page_container(1)
+        title = ttk.Label(page, text='Periscope', font='bold 18', anchor='w') \
+                .pack(fill='both', padx=10, pady=5)
+        information = ttk.Label(page, text=acknowledge_text, anchor='w',
+                wraplength='600', font='18') \
+                .pack(fill='both', padx=10, pady=15)
+        warning = ttk.Label(page, text=warning_text, font='bold', anchor='sw',
+                wraplength='600') \
+                .pack(fill='both', padx=10)
+        placate = ttk.Label(page, text=placate_text, font='18', anchor='w') \
+                .pack(fill='both', padx=10)
 
-def test_page(root):
-    page = root.page_container(3)
-    title = ttk.Label(page, text='Running Tests', font='bold 18', anchor='w') \
-            .pack(fill='both', padx=10, pady=5)
+    def level_page(self, root):
 
-    c_web = Tkinter.Checkbutton(page, state='disabled', text='Testing Official Website', anchor='w')
-    c_web.select()
-    c_web.pack(fill='x')
+        def text_generator(risk):
+            text = ''
+            for test in self.periscope.TestManager.netTestsByRisk(risk):
+                text = text + test.name + ": \n" + test.description + ".\n\n"
+            self.riskText.set(text)
 
-    dir_auths = Tkinter.Checkbutton(page, state='disabled', text='Probing Directory Authorities', anchor='w')
-    dir_auths.pack(fill='x')
+        page = root.page_container(2)
+        title = ttk.Label(page, text='Intrusiveness', font='bold 18', anchor='w') \
+                .pack(fill='both', padx=10, pady=5)
+        slider_title = ttk.Label(page, text='Risk Level   At this risk '\
+                'level, the following tests will be run:', font='16', anchor='w') \
+                .pack(fill='x', padx=20)
+        risk_slider = Tkinter.Scale(page, from_=5, to=1, orient='vertical',
+                tickinterval=1, showvalue=False, command=text_generator) \
+                .pack(fill='y', padx=30, pady=10, side='left')
+        self.riskText = Tkinter.StringVar()
+        risk_text = ttk.Label(page, textvariable=self.riskText,# font='14',
+                anchor='sw', wraplength='600')\
+                .pack(fill='both', padx=20, pady=20)
 
-    relays = Tkinter.Checkbutton(page, text='Access to Relays')
+    def test_page(self, root):
+        page = root.page_container(3)
+        title = ttk.Label(page, text='Running Tests', font='bold 18', anchor='w') \
+                .pack(fill='both', padx=10, pady=5)
 
-    four = Tkinter.Checkbutton(page, text='Access to Bridges')
+        c_web = Tkinter.Checkbutton(page, state='disabled', text='Testing Official Website', anchor='w')
+        c_web.select()
+        c_web.pack(fill='x')
 
-def demo(periscope):
-    periscope = periscope
-    root = Tkinter.Tk()
-    root.title("Periscope")
-    wizard = Wizard(npages=6)
-    wizard.master.minsize(600, 400)
-    welcome_page(wizard)
-    acknowledge_page(wizard)
-    level_page(wizard)
-    test_page(wizard)
-    wizard.pack(fill='both', expand=True)
-    root.mainloop()
+        dir_auths = Tkinter.Checkbutton(page, state='disabled', text='Probing Directory Authorities', anchor='w')
+        dir_auths.pack(fill='x')
 
-if __name__ == "__main__":
-    demo()
+        relays = Tkinter.Checkbutton(page, text='Access to Relays')
+
+        four = Tkinter.Checkbutton(page, text='Access to Bridges')
 
