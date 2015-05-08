@@ -1,8 +1,8 @@
 class NetTest:
     '''
     NetTest represents a test that periscope runs. Each NetTest is
-    assigned a 'riskLevel' between 1 and 5 - were 1 is the least risky
-    and 5 is the most risky..
+    assigned a 'riskLevel' between 1 and 5 - were 1 is the safest
+    and 5 is the most dangerous.
     '''
     def __init__(self):
         self.name = ''
