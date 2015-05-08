@@ -120,6 +120,22 @@ def level_page(root):
             tickinterval=1, showvalue=False) \
             .pack(fill='y', padx=30, pady=10, side='left')
 
+def test_page(root):
+    page = root.page_container(3)
+    title = ttk.Label(page, text='Running Tests', font='bold 18', anchor='w') \
+            .pack(fill='both', padx=10, pady=5)
+
+    c_web = Tkinter.Checkbutton(page, state='disabled', text='Testing Official Website', anchor='w')
+    c_web.select()
+    c_web.pack(fill='x')
+
+    dir_auths = Tkinter.Checkbutton(page, state='disabled', text='Probing Directory Authorities', anchor='w')
+    dir_auths.pack(fill='x')
+
+    relays = Tkinter.Checkbutton(page, text='Access to Relays')
+
+    four = Tkinter.Checkbutton(page, text='Access to Bridges')
+
 def demo():
     root = Tkinter.Tk()
     root.title("Periscope")
@@ -128,6 +144,7 @@ def demo():
     welcome_page(wizard)
     acknowledge_page(wizard)
     level_page(wizard)
+    test_page(wizard)
     wizard.pack(fill='both', expand=True)
     root.mainloop()
 
