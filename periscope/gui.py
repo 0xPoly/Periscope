@@ -2,6 +2,8 @@
 import ttk
 import Tkinter
 
+import tests
+
 class Wizard(object, ttk.Notebook):
     def __init__(self, master=None, **kw):
         npages = kw.pop('npages', 3)
@@ -109,15 +111,16 @@ def acknowledge_page(root):
             .pack(fill='both', padx=10)
 
 def level_page(root):
-    def text_generator():
-        print 'hello'
+    def text_generator(risk):
+        for test in periscope.TestManager.netTestsByRisk(risk):
+            ttk.Label(page, text=test.name).pack()
     page = root.page_container(2)
     title = ttk.Label(page, text='Intrusiveness', font='bold 18', anchor='w') \
             .pack(fill='both', padx=10, pady=5)
     slider_title = ttk.Label(page, text='Risk Level', font='16', anchor='w') \
             .pack(fill='x', padx=20)
     risk_slider = Tkinter.Scale(page, from_=5, to=1, orient='vertical',
-            tickinterval=1, showvalue=False) \
+            tickinterval=1, showvalue=False, command=text_generator) \
             .pack(fill='y', padx=30, pady=10, side='left')
 
 def test_page(root):
@@ -136,7 +139,8 @@ def test_page(root):
 
     four = Tkinter.Checkbutton(page, text='Access to Bridges')
 
-def demo():
+def demo(periscope):
+    periscope = periscope
     root = Tkinter.Tk()
     root.title("Periscope")
     wizard = Wizard(npages=6)
